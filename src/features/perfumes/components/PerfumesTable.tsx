@@ -63,7 +63,7 @@ export const PerfumesTable = ({ perfumes, onEdit, loading }: Props) => {
                     </div>
                     <div>
                       <p className="font-bold text-slate-900">{perfume.nombre}</p>
-                      <p className="text-xs text-slate-500 max-w-[200px] truncate" title={perfume.descripcion}>
+                      <p className="text-xs text-slate-500 max-w-[200px] truncate" title={perfume.descripcion || undefined}>
                         {perfume.descripcion || 'Sin descripción'}
                       </p>
                     </div>

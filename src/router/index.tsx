@@ -1,6 +1,4 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
-import type { Rol } from '../types/database.types';
 
 // Layout global
 import { MainLayout } from '../components/layout/MainLayout';

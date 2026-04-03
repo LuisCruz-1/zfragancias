@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { Sidebar } from "./Sidebar";
@@ -5,6 +6,7 @@ import { Header } from "./Header";
 
 export const MainLayout = () => {
   const { session, loading } = useAuth();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   if (loading) {
     return (
@@ -21,11 +23,11 @@ export const MainLayout = () => {
   }
 
   return (
-    <div className="flex h-screen w-full bg-gray-50 overflow-hidden font-sans">
-      <Sidebar />
-      <div className="flex flex-col flex-1 min-w-0">
-        <Header />
-        <main className="flex-1 overflow-y-auto p-6 bg-slate-50/50">
+    <div className="flex h-screen w-full bg-gray-50 overflow-hidden font-sans relative">
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      <div className="flex flex-col flex-1 min-w-0 transition-all duration-300">
+        <Header onMenuClick={() => setIsSidebarOpen(true)} />
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-slate-50/50">
           <div className="max-w-7xl mx-auto h-full">
             <Outlet />
           </div>

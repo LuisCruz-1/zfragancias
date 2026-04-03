@@ -5,7 +5,7 @@ import { useAuth } from '../hooks/useAuth';
 import { InvitarUsuarioModal } from '../features/usuarios/components/InvitarUsuarioModal';
 
 const Usuarios = () => {
-  const { usuarios, loading, error, fetchUsuarios } = useUsuarios();
+  const { usuarios, loading, error, fetchUsuarios, invitarUsuario } = useUsuarios();
   const { userProfile } = useAuth();
   const isAdmin = userProfile?.rol?.nombre === 'admin';
   const [isModalOpen, setIsModalOpen] = useState(false);

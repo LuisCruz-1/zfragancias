@@ -109,7 +109,7 @@ export const PerfumeModal = ({ isOpen, onClose, onSave, perfumeToEdit }: ModalPr
                 type="number"
                 name="ml"
                 min="1"
-                value={formData.ml}
+                value={formData.ml ?? ''}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
               />
@@ -144,7 +144,7 @@ export const PerfumeModal = ({ isOpen, onClose, onSave, perfumeToEdit }: ModalPr
             <label className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
             <textarea
               name="descripcion"
-              value={formData.descripcion}
+              value={formData.descripcion ?? ''}
               onChange={handleChange}
               rows={3}
               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none resize-none"
@@ -156,7 +156,7 @@ export const PerfumeModal = ({ isOpen, onClose, onSave, perfumeToEdit }: ModalPr
             <input
               type="url"
               name="imagen_url"
-              value={formData.imagen_url}
+              value={formData.imagen_url ?? ''}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
               placeholder="https://..."

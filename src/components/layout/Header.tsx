@@ -7,23 +7,37 @@ import {
   Users, 
   PieChart,
   LayoutDashboard,
-  LogOut
+  LogOut,
+  Menu
 } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 
-export const Header = () => {
+interface HeaderProps {
+  onMenuClick?: () => void;
+}
+
+export const Header = ({ onMenuClick }: HeaderProps) => {
   const { userProfile, signOut } = useAuth();
 
   return (
-    <header className="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6 shrink-0">
+    <header className="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-4 md:px-6 shrink-0 relative z-20 transition-all duration-300">
       <div className="flex items-center gap-4">
-        <h2 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+        {onMenuClick && (
+          <button 
+            onClick={onMenuClick}
+            className="md:hidden p-2 -ml-2 rounded-md text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors"
+            aria-label="Abrir menú"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+        )}
+        <h2 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent hidden sm:block">
           Zapphiro ERP
         </h2>
         {userProfile?.sucursal_id && (
           <span className="px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-sm font-medium border border-indigo-100 flex items-center gap-2">
             <Store className="w-4 h-4" />
-            Sucursal {userProfile.sucursal_id.substring(0, 4).toUpperCase()}
+            <span className="hidden sm:inline">Sucursal</span> {userProfile.sucursal_id.substring(0, 4).toUpperCase()}
           </span>
         )}
       </div>

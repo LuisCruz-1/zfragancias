@@ -36,16 +36,19 @@ export const useReportes = () => {
 
       // Filtros por rol
       if (userProfile?.rol?.nombre === 'gerente' || userProfile?.rol?.nombre === 'vendedor') {
-        query = query.eq('sucursal_id', userProfile.sucursal_id);
+        if (userProfile.sucursal_id) {
+          query = query.eq('sucursal_id', userProfile.sucursal_id);
+        }
       } else if (sucursalId) {
         query = query.eq('sucursal_id', sucursalId);
       }
 
       const { data, error } = await query;
+      const parsedData = data as any[];
       
       if (error) throw error;
 
-      setVentas(data || []);
+      setVentas(parsedData || []);
 
       // Calcular métricas agregadas
       let ingresos = 0;
@@ -56,14 +59,14 @@ export const useReportes = () => {
       // Agrupar por vendedor para comisiones
       const vendedoresMap: Record<string, any> = {};
 
-      (data || []).forEach(v => {
+      (parsedData || []).forEach(v => {
         ingresos += v.total_venta || 0;
         costos += v.total_costo_importacion || 0;
         comisiones += v.total_comision || 0;
         ganancia += v.total_ganancia_gerente || 0; // O si es admin general, la ganancia real es el restante de lo que queda
 
         const vendedorId = v.usuarios?.id;
-        const nombreVendedor = v.usuarios ? `${v.usuarios.nombre} ${v.usuarios.apellido}` : 'Desconocido';
+        const nombreVendedor = v.usuarios ? `${v.usuarios.nombre} ${v.usuarios.apellido || ''}`.trim() : 'Desconocido';
         
         if (vendedorId) {
           if (!vendedoresMap[vendedorId]) {

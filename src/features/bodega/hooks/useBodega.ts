@@ -9,7 +9,7 @@ export type BodegaStockWithPerfume = BodegaStock & {
   perfume?: { nombre: string; codigo_unico: string; marca: string } | null;
 };
 
-export type InsertBodegaStock = Omit<BodegaStock, 'id' | 'created_at' | 'updated_at'>;
+export type InsertBodegaStock = Database['public']['Tables']['bodega_stock']['Insert'];
 
 export const useBodega = () => {
   const [stock, setStock] = useState<BodegaStockWithPerfume[]>([]);
