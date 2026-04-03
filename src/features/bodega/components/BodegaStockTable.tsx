@@ -1,4 +1,4 @@
-import { Box, Package, Target } from "lucide-react";
+import {Package} from "lucide-react";
 import type { BodegaStockWithPerfume } from "../hooks/useBodega";
 
 interface Props {

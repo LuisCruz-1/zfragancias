@@ -1,4 +1,3 @@
-import React from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useDashboard } from '../features/dashboard/hooks/useDashboard';
 import { AdminDashboard, GerenteDashboard, VendedorDashboard } from '../features/dashboard/components/DashboardPanels';

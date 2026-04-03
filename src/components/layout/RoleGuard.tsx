@@ -1,6 +1,7 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
-import type { Rol } from "../../types/database.types";
+
+export type Rol = "admin" | "gerente" | "responsable" | "vendedor";
 
 interface RoleGuardProps {
   children: React.ReactNode;

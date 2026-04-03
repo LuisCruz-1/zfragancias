@@ -1,12 +1,5 @@
 import { 
-  Building2, 
   Store, 
-  ShoppingBag, 
-  Warehouse, 
-  ArrowRightLeft, 
-  Users, 
-  PieChart,
-  LayoutDashboard,
   LogOut,
   Menu
 } from "lucide-react";

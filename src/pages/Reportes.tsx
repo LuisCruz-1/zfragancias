@@ -15,11 +15,10 @@ const Reportes = () => {
   
   const [fechaInicio, setFechaInicio] = useState(primerDiaMes);
   const [fechaFin, setFechaFin] = useState(fechaHoyStr);
-  const [sucursalFiltro, setSucursalFiltro] = useState('');
 
   useEffect(() => {
-    fetchReportes(fechaInicio, fechaFin, sucursalFiltro);
-  }, [fetchReportes, fechaInicio, fechaFin, sucursalFiltro]);
+    fetchReportes(fechaInicio, fechaFin); // TODO: Agregar selector de sucursal más adelante si se desea
+  }, [fetchReportes, fechaInicio, fechaFin]);
 
   const handleExportCSV = () => {
     const csvContent = [

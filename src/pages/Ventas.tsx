@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../hooks/useAuth';
 import { useVentas } from '../features/ventas/hooks/useVentas';
 import { ShoppingCart, PackageSearch, Trash2, Plus, Minus } from 'lucide-react';
 
 const Ventas = () => {
-  const { userProfile } = useAuth();
   const { stockLocal, registrarVenta, fetchStockLocal } = useVentas();
   
   const [carrito, setCarrito] = useState<any[]>([]);

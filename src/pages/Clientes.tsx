@@ -1,4 +1,3 @@
-import React from 'react';
 
 const Clientes = () => (
   <div className="p-8">

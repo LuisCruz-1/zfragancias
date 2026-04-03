@@ -1,4 +1,4 @@
-import { ArrowRightLeft, FileSearch, CheckCircle2 } from "lucide-react";
+import { ArrowRightLeft, FileSearch } from "lucide-react";
 import type { Database } from "../../../types/database.types";
 
 type Transferencia = Database['public']['Tables']['transferencias']['Row'] & {
