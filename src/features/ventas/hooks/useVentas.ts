@@ -14,7 +14,7 @@ export const useVentas = () => {
     setLoading(true);
     const { data, error } = await supabase
       .from('ventas')
-      .select('*, usuarios!vendedor_id(nombre, apellido), clientes(nombre, telefono)')
+      .select('*, usuarios!vendedor_id(nombre), clientes(nombre, telefono)')
       .eq('sucursal_id', userProfile.sucursal_id)
       .order('created_at', { ascending: false });
     
@@ -35,7 +35,7 @@ export const useVentas = () => {
   }, [userProfile]);
 
   // Procesar una nueva venta
-  const registrarVenta = async (clienteId: string | null, total: number, metodoPago: string, items: any[]) => {
+  const registrarVenta = async (clienteId: string | null, total: number, metodoPago: string, items: any[], montosMixtos?: {efectivo: number, tarjeta: number}) => {
     if (!userProfile?.sucursal_id) return { error: 'No tienes sucursal asignada' };
 
     try {
@@ -93,7 +93,34 @@ export const useVentas = () => {
 
       if (detalleError) throw detalleError;
 
-      // 3. Actualizar Stock de Sucursal restando las cantidades vendidas
+      // 3. Insertar pagos mixtos si aplica
+      if (metodoPago === 'mixto' && montosMixtos) {
+        const pagosInsert = [];
+        if (montosMixtos.efectivo > 0) {
+          pagosInsert.push({
+            venta_id: venta.id,
+            metodo_pago: 'efectivo',
+            monto: montosMixtos.efectivo
+          });
+        }
+        if (montosMixtos.tarjeta > 0) {
+          pagosInsert.push({
+            venta_id: venta.id,
+            metodo_pago: 'tarjeta_credito', // Asumido crédito por default para mixto en UI
+            monto: montosMixtos.tarjeta
+          });
+        }
+        
+        if (pagosInsert.length > 0) {
+          const { error: pagosError } = await supabase
+            .from('venta_pagos')
+            .insert(pagosInsert);
+            
+          if (pagosError) throw pagosError;
+        }
+      }
+
+      // 4. Actualizar Stock de Sucursal restando las cantidades vendidas
       for (const item of items) {
         const stockRecord = stockLocal.find(s => s.id === item.stock_id);
         if (stockRecord) {

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useVentas } from '../features/ventas/hooks/useVentas';
 import { ShoppingCart, PackageSearch, Trash2, Plus, Minus } from 'lucide-react';
+import { ModalCobro } from '../features/ventas/components/ModalCobro';
 
 const Ventas = () => {
   const { stockLocal, registrarVenta, fetchStockLocal } = useVentas();
@@ -49,12 +50,17 @@ const Ventas = () => {
   };
 
   const total = carrito.reduce((acc, current) => acc + (current.precio * current.cantidad), 0);
+  const [modalAbierto, setModalAbierto] = useState(false);
+  const [loadingCobro, setLoadingCobro] = useState(false);
 
-  const cobrar = async () => {
-    if (carrito.length === 0) return;
-    const { error } = await registrarVenta(null, total, 'efectivo', carrito);
+  const procesarCobroFinal = async (metodo: string, montosMixtos?: {efectivo: number, tarjeta: number}, clienteId?: string | null) => {
+    setLoadingCobro(true);
+    const { error } = await registrarVenta(clienteId || null, total, metodo, carrito, montosMixtos);
+    setLoadingCobro(false);
+    
     if (!error) {
       setCarrito([]);
+      setModalAbierto(false);
       alert("Venta procesada exitosamente.");
     } else {
       alert("Error procesando venta: " + error);
@@ -64,9 +70,9 @@ const Ventas = () => {
   const stockFiltrado = stockLocal.filter(s => s.perfumes?.nombre.toLowerCase().includes(busqueda.toLowerCase()));
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-140px)]">
+    <div className="flex flex-col lg:grid lg:grid-cols-3 gap-6 h-auto lg:h-[calc(100vh-140px)]">
       {/* Catálogo de Venta */}
-      <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+      <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-[65vh] lg:h-auto">
         <div className="p-4 border-b border-slate-200 bg-slate-50 flex items-center gap-3">
           <PackageSearch className="text-slate-500" />
           <input 
@@ -103,7 +109,7 @@ const Ventas = () => {
       </div>
 
       {/* POS Ticket */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col overflow-hidden">
+      <div className="bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col overflow-hidden h-auto lg:h-full relative">
         <div className="p-4 border-b border-slate-200 bg-indigo-50 flex gap-2 items-center">
           <ShoppingCart className="text-indigo-600" />
           <h2 className="font-bold text-indigo-900">Ticket de Venta</h2>
@@ -150,7 +156,7 @@ const Ventas = () => {
           </div>
           
           <button 
-            onClick={cobrar}
+            onClick={() => setModalAbierto(true)}
             disabled={carrito.length === 0}
             className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-bold py-3 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2"
           >
@@ -159,6 +165,16 @@ const Ventas = () => {
           </button>
         </div>
       </div>
+
+      {/* MODAL DE COBRO */}
+      {modalAbierto && (
+        <ModalCobro 
+          total={total} 
+          onClose={() => setModalAbierto(false)} 
+          onConfirmar={procesarCobroFinal}
+          isLoading={loadingCobro}
+        />
+      )}
     </div>
   );
 };

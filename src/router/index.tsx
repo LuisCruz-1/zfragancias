@@ -12,9 +12,10 @@ import Transferencias from '../pages/Transferencias';
 import Sucursales from '../pages/Sucursales';
 import Ventas from '../pages/Ventas';
 import Clientes from '../pages/Clientes';
-import Reportes from '../pages/Reportes';
+import { HistorialVentas } from '../pages/HistorialVentas';
 import Perfumes from '../pages/Perfumes';
 import Usuarios from '../pages/Usuarios';
+import Ayuda from '../pages/Ayuda';
 
 export const router = createBrowserRouter([
   {
@@ -70,18 +71,18 @@ export const router = createBrowserRouter([
         )
       },
       {
-        path: 'clientes',
+        path: 'historial-ventas',
         element: (
           <RoleGuard allowedRoles={['admin', 'gerente', 'responsable', 'vendedor']}>
-            <Clientes />
+            <HistorialVentas />
           </RoleGuard>
         )
       },
       {
-        path: 'reportes',
+        path: 'clientes',
         element: (
-          <RoleGuard allowedRoles={['admin', 'gerente', 'responsable']}>
-            <Reportes />
+          <RoleGuard allowedRoles={['admin', 'gerente', 'responsable', 'vendedor']}>
+            <Clientes />
           </RoleGuard>
         )
       },
@@ -98,6 +99,14 @@ export const router = createBrowserRouter([
         element: (
           <RoleGuard allowedRoles={['admin']}>
             <Usuarios />
+          </RoleGuard>
+        )
+      },
+      {
+        path: 'ayuda',
+        element: (
+          <RoleGuard allowedRoles={['admin', 'gerente', 'responsable', 'vendedor']}>
+            <Ayuda />
           </RoleGuard>
         )
       }

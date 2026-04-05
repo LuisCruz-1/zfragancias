@@ -1,28 +1,8 @@
-import { NavLink } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
-import {
-  LayoutDashboard,
-  Warehouse,
-  ShoppingBag,
-  ArrowRightLeft,
-  Store,
-  Users,
-  Droplet,
-  History,
-  X,
-  HelpCircle
-} from "lucide-react";
+const fs = require('fs');
 
-type Rol = "admin" | "gerente" | "responsable" | "vendedor";
+let content = fs.readFileSync('src/components/layout/Sidebar.tsx', 'utf8');
 
-interface MenuItem {
-  path: string;
-  label: string;
-  icon: React.ElementType;
-  roles: Rol[];
-}
-
-interface MenuItemGroup {
+const newCode = `interface MenuItemGroup {
   group: string;
   items: MenuItem[];
 }
@@ -53,52 +33,27 @@ const MENU_GROUPS: MenuItemGroup[] = [
   {
     group: 'Administración',
     items: [
-            { path: '/sucursales', label: 'Sucursales', icon: Store, roles: ['admin'] },  
+      { path: '/reportes', label: 'Reportes', icon: PieChart, roles: ['admin', 'gerente', 'responsable'] },
+      { path: '/sucursales', label: 'Sucursales', icon: Store, roles: ['admin'] },  
       { path: '/usuarios', label: 'Usuarios', icon: Users, roles: ['admin'] }
-    ]  },
-  {
-    group: 'Soporte',
-    items: [
-      { path: '/ayuda', label: 'Centro de Ayuda', icon: HelpCircle, roles: ['admin', 'gerente', 'responsable', 'vendedor'] }
-    ]  }
-];
+    ]
+  }
+];`;
 
-interface SidebarProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
+content = content.replace(/const MENU_ITEMS[\s\S]*?\];/, newCode);
 
-export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
+const newComponentCode = `export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const { userProfile } = useAuth();
   const userRole = userProfile?.rol?.nombre as Rol;
 
   const accessibleGroups = MENU_GROUPS.map(group => ({
     ...group,
     items: group.items.filter(item => userRole ? item.roles.includes(userRole) : false)
-  })).filter(group => group.items.length > 0);
+  })).filter(group => group.items.length > 0);`;
 
-  return (
-    <>
-      {/* Overlay for mobile */}
-      {isOpen && (
-        <div 
-          className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 lg:hidden"
-          onClick={onClose}
-        />
-      )}
+content = content.replace(/export const Sidebar =[\s\S]*?false\n  \);/, newComponentCode);
 
-      {/* Sidebar container */}
-      <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 text-white flex flex-col shrink-0 transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="h-16 flex items-center justify-between px-6 border-b border-slate-800 shrink-0">
-          <h1 className="text-xl font-black tracking-widest text-indigo-400">
-            ZAPPHIRO
-          </h1>
-          <button onClick={onClose} className="lg:hidden text-slate-400 hover:text-white transition-colors">
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-                        <nav className="flex-1 overflow-y-auto py-6 px-3 flex flex-col gap-6">  
+const newNavCode = `        <nav className="flex-1 overflow-y-auto py-6 px-3 flex flex-col gap-6">  
           {accessibleGroups.map((group, index) => (
             <div key={index} className="flex flex-col gap-1">
               <p className="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
@@ -114,11 +69,11 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                       if (window.innerWidth < 1024) onClose();
                     }}
                     className={({ isActive }) =>
-                      `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 ${
+                      \`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 \${
                         isActive
                           ? 'bg-indigo-600 text-white shadow-md shadow-indigo-900/20 font-medium'
                           : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200 font-medium'
-                      }`
+                      }\`
                     }
                   >
                     <Icon className="w-5 h-5" />
@@ -128,17 +83,9 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
               })}
             </div>
           ))}
-        </nav>
+        </nav>`;
 
-        <div className="p-4 border-t border-slate-800">
-          <div className="bg-slate-800 rounded-xl p-4 flex flex-col gap-1">
-            <span className="text-xs text-slate-400 uppercase font-bold tracking-wider">Rol de acceso</span>
-            <span className="text-sm font-semibold capitalize text-indigo-300">
-              {userRole || 'Sin Rol'}
-            </span>
-          </div>
-        </div>
-      </aside>
-    </>
-  );
-};
+content = content.replace(/<nav className="flex-1 overflow-y-auto[\s\S]*?<\/nav>/, newNavCode);
+
+fs.writeFileSync('src/components/layout/Sidebar.tsx', content);
+console.log('Sidebar updated');

@@ -19,7 +19,7 @@ export const useReportes = () => {
         .from('ventas')
         .select(`
           *,
-          usuarios!vendedor_id (id, nombre, apellido),
+          usuarios!vendedor_id (id, nombre),
           venta_items (
             cantidad,
             subtotal,
@@ -66,7 +66,7 @@ export const useReportes = () => {
         ganancia += v.total_ganancia_gerente || 0; // O si es admin general, la ganancia real es el restante de lo que queda
 
         const vendedorId = v.usuarios?.id;
-        const nombreVendedor = v.usuarios ? `${v.usuarios.nombre} ${v.usuarios.apellido || ''}`.trim() : 'Desconocido';
+        const nombreVendedor = v.usuarios ? v.usuarios.nombre : 'Desconocido';
         
         if (vendedorId) {
           if (!vendedoresMap[vendedorId]) {
