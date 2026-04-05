@@ -98,7 +98,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           </button>
         </div>
 
-                        <nav className="flex-1 overflow-y-auto py-6 px-3 flex flex-col gap-6">  
+        <nav className="flex-1 overflow-y-auto scrollbar-none py-6 px-3 flex flex-col gap-6">  
           {accessibleGroups.map((group, index) => (
             <div key={index} className="flex flex-col gap-1">
               <p className="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
